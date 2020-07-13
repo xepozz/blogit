@@ -1,0 +1,8 @@
+Posts:
+<div ng-controller="PostCollection" ng-init="loadPosts()">
+    <div ng-repeat="post in posts track by $index">
+        <post post="post"></post>
+        <hr ng-hide="$index === posts.length-1">
+    </div>
+    <div load-next></div>
+</div>
