@@ -1,5 +1,11 @@
 <div class="blog-post">
-    <!--<h2 class="blog-post-title">Another blog post</h2>-->
-    <!--<p class="blog-post-meta">December 23, 2013 by <a href="#">Jacob</a></p>-->
-    <span ng-bind-html="post"></span>
+    <h2 class="blog-post-title">{{ post.title }}</h2>
+    <p class="blog-post-meta" ng-if="post.tags.length">
+        Tags: <a href="#" ng-repeat="tag in post.tags" class="pr-2">#{{ tag }}</a>
+    </p>
+    <span ng-bind-html="post.body"></span>
+    <p class="blog-post-meta">
+        {{ post.createdAt }} by
+        <a href="{{ post.author.url }}" target="_blank">{{ post.author.username }}</a>
+    </p>
 </div>
