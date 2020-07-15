@@ -1,14 +1,20 @@
 <div ng-controller="PostCollection" ng-init="loadPosts()">
     <div ng-repeat="post in posts track by $index">
         <post post="post"></post>
-        <hr ng-hide="$index === posts.length-1">
     </div>
     <nav class="blog-pagination">
-        <button ng-class="['btn', 'btn-outline-primary', {disabled: !canLoadNext}]"
-                aria-disabled="{{ !canLoadNext }}"
-                ng-click="loadNext()">
-            Load next
-        </button>
+        <div class="mb-3 ml-3" ng-if="showSpinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        
+        <div ng-if="!showSpinner">
+            <button ng-class="['btn', 'btn-outline-primary', {disabled: !canLoadNext}]"
+                    aria-disabled="{{ !canLoadNext }}"
+                    ng-click="loadNext()">
+                Load next
+            </button>
+        </div>
     </nav>
 </div>
-

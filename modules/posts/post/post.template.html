@@ -1,11 +1,13 @@
 <div class="blog-post markdown-body">
-    <h2 class="blog-post-title">{{ post.title }}</h2>
-    <p class="blog-post-meta" ng-if="post.tags.length">
-        Tags: <a href="#" ng-repeat="tag in post.tags" class="pr-2">#{{ tag }}</a>
+    <h2 class="blog-post-title">
+        <a href="#!/post/{{ $ctrl.post.id }}"># {{ $ctrl.post.title }}</a>
+    </h2>
+    <p class="blog-post-meta" ng-if="$ctrl.post.tags.length">
+        Tags: <a href="#" ng-repeat="tag in $ctrl.post.tags" class="pr-2">#{{ tag }}</a>
     </p>
-    <span ng-bind-html="post.body"></span>
+    <span ng-bind-html="$ctrl.post.body"></span>
     <p class="blog-post-meta">
-        {{ post.createdAt }} by
-        <a href="{{ post.author.url }}" target="_blank">{{ post.author.username }}</a>
+        {{ $ctrl.post.createdAt }} by
+        <a href="{{ $ctrl.post.author.url }}" target="_blank">{{ $ctrl.post.author.username }}</a>
     </p>
 </div>
