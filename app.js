@@ -28,3 +28,22 @@ angular
         };
     })
 ;
+
+/**
+ * Bootstrap
+ */
+
+marked.setOptions({
+    highlight: function (code, language) {
+        console.log(code)
+        const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
+        return hljs.highlight(validLanguage, code).value;
+    },
+    pedantic: true,
+    gfm: true,
+    breaks: false,
+    sanitize: true,
+    smartLists: true,
+    smartypants: true,
+    xhtml: true
+});
