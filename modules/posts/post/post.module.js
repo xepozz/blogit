@@ -1,5 +1,5 @@
 angular
-    .module('postModule', ['ngRoute'])
+    .module('postModule', ['ngRoute', 'commentsModule'])
     .factory('PostRepository', function PostRepository($http) {
         return {
             loadPost: async (id) => {
@@ -32,7 +32,7 @@ angular
 ;
 
 
-function Post(id, title, body, author, tags, createdAt) {
+function Post(id, title, body, author, tags, commentsCount, createdAt) {
     return {
         id: id,
         title: title,
@@ -40,6 +40,7 @@ function Post(id, title, body, author, tags, createdAt) {
         author: author,
         tags: tags,
         selfUrl: id,
+        commentsCount: commentsCount,
         createdAt: createdAt,
     }
 }
@@ -56,5 +57,5 @@ function createPostFromIssue(issue) {
     const author = new Author(issue.user.login, issue.user.html_url, issue.user.avatar_url);
     const tags = issue.labels.map((label) => label.name);
 
-    return new Post(issue.number, issue.title, issue.body, author, tags, issue.created_at)
+    return new Post(issue.number, issue.title, issue.body, author, tags, issue.comments, issue.created_at)
 }

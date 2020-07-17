@@ -1,13 +1,31 @@
-<div class="blog-post markdown-body">
+<div id="post-{{ $ctrl.post.id }}" class="blog-post">
     <h2 class="blog-post-title">
-        <a href="#!/post/{{ $ctrl.post.id }}"># {{ $ctrl.post.title }}</a>
+        <a href="#!/post/{{ $ctrl.post.id }}" class="text-decoration-none"># {{ $ctrl.post.title }}</a>
     </h2>
     <p class="blog-post-meta" ng-if="$ctrl.post.tags.length">
         Tags: <a href="#" ng-repeat="tag in $ctrl.post.tags" class="pr-2">#{{ tag }}</a>
     </p>
-    <span ng-bind-html="$ctrl.post.body"></span>
+    <span ng-bind-html="$ctrl.post.body" class="markdown-body"></span>
     <p class="blog-post-meta">
-        {{ $ctrl.post.createdAt }} by
-        <a href="{{ $ctrl.post.author.url }}" target="_blank">{{ $ctrl.post.author.username }}</a>
+        <span>
+            <span title="{{ $ctrl.post.createdAt | date: 'medium' }}">
+                {{ $ctrl.post.createdAt | date: "d MMM yyyy 'at' H:mm"}}
+            </span>
+            by
+            <a href="{{ $ctrl.post.author.url }}" target="_blank">
+                @{{ $ctrl.post.author.username }}
+            </a>
+        </span>
+        <span ng-if="$ctrl.post.commentsCount" class="pl-1">
+            <a ng-click="$ctrl.loadComments()"
+               href="#"
+               class="link-secondary "
+               data-target="#comments-{{ $ctrl.post.id }}"
+               data-toggle="collapse"
+            >
+                 Comments ({{ $ctrl.post.commentsCount }})
+            </a>
+        </span>
     </p>
+    <comments post="$ctrl.post" ng-if="$ctrl.commentsLoaded"></comments>
 </div>

@@ -6,7 +6,11 @@ angular
         bindings: {
             post: '=',
         },
-        controller: function PostController($sce, $routeParams) {
+        controller: function PostController($sce) {
+            this.commentsLoaded = false
+            this.loadComments = () =>{
+                this.commentsLoaded = true
+            }
             this.$onInit = function () {
                 this.post.body = $sce.trustAsHtml(marked(this.post.body))
             };
