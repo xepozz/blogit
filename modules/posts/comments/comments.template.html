@@ -1,4 +1,10 @@
-<div ng-if="$ctrl.comments.length" id="comments-{{ $ctrl.post.id }}" class="mt-3 collapse show">
+<div ng-if="$ctrl.showSpinner" class="mb-3 ml-3">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<div ng-if="!$ctrl.showSpinner && $ctrl.comments.length" id="comments-{{ $ctrl.post.id }}" class="mt-3 collapse show">
     <h5>Comments:</h5>
     <div ng-repeat="comment in $ctrl.comments">
         <div class="card mb-2 border-0">
@@ -10,10 +16,12 @@
                     <div class="col-md-11">
                         <div class="card-header bg-transparent">
                             <span>
-                            @{{ comment.author.username }}
+                                @{{ comment.author.username }}
                             </span>
                             <span class="float-right">
-                                <span title="{{ comment.createdAt | date: 'medium' }}">{{ comment.createdAt | date: "d MMM yyyy 'at' H:mm" }}</span>
+                                <span title="{{ comment.createdAt | date: 'medium' }}">
+                                    {{ comment.createdAt | date: "d MMM yyyy 'at' H:mm" }}
+                                </span>
                             </span>
                         </div>
                         <div class="card-body">

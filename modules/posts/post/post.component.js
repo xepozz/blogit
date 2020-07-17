@@ -8,11 +8,13 @@ angular
         },
         controller: function PostController($sce) {
             this.commentsLoaded = false
-            this.loadComments = () =>{
+            this.showSpinner = true
+            this.loadComments = () => {
                 this.commentsLoaded = true
             }
-            this.$onInit = function () {
+            this.$onInit = () => {
                 this.post.body = $sce.trustAsHtml(marked(this.post.body))
+                this.showSpinner = false
             };
         }
     })

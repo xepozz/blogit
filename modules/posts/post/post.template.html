@@ -1,4 +1,10 @@
-<div id="post-{{ $ctrl.post.id }}" class="blog-post">
+<div ng-if="$ctrl.showSpinner" class="mb-3 ml-3">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<div ng-if="!$ctrl.showSpinner" id="post-{{ $ctrl.post.id }}" class="blog-post">
     <h2 class="blog-post-title">
         <a href="#!/post/{{ $ctrl.post.id }}" class="text-decoration-none"># {{ $ctrl.post.title }}</a>
     </h2>

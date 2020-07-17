@@ -14,6 +14,7 @@ angular
                 FORBID_ATTR: ['style'],
                 IN_PLACE: true
             }
+            this.showSpinner = true
             this.$onInit = function () {
                 $q
                     .resolve(CommentRepository.getForPost(this.post.id))
@@ -27,6 +28,7 @@ angular
                             )
                             return comment
                         })
+                        this.showSpinner = false
                     })
             };
         }
