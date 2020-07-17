@@ -1,8 +1,10 @@
 angular
-    .module('app', ['posts'])
-    .config(['$httpProvider', function ($http) {
-        $http.defaults.headers.common.Authorization = 'token ';
-    }])
+    .module('app', ['ngStorage', 'posts'])
+    .config(function ($httpProvider, $provide, $localStorageProvider) {
+        $localStorageProvider.get('Github') || $localStorageProvider.set('Github', {token: ''})
+        $httpProvider.defaults.headers.common.Authorization = 'token ' + $localStorageProvider.get('Github').token;
+        $provide.constant('BASE_API_URL', 'https://api.github.com/repos/xepozz/blogit')
+    })
     .directive('main', function () {
         return {
             restrict: 'E',

@@ -1,13 +1,11 @@
 angular
     .module('postModule', ['ngRoute', 'commentsModule'])
-    .factory('PostRepository', function PostRepository($http) {
+    .factory('PostRepository', function PostRepository($http, BASE_API_URL) {
         return {
             loadPost: async (id) => {
                 return $http
-                    .get(`https://api.github.com/repos/xepozz/blogit/issues/${id}?state=open&sort=created`)
-                    // .get(`http://localhost:63342/blogit/src/posts/${id}.md`)
+                    .get(`${BASE_API_URL}/issues/${id}?state=open&sort=created`)
                     .then(response => {
-                        // const post = (response.data);
                         const post = createPostFromIssue(response.data);
                         console.log(response.data)
                         console.log(post)

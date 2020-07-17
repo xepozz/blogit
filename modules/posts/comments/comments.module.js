@@ -1,10 +1,10 @@
 angular
     .module('commentsModule', [])
-    .factory('CommentRepository', function CommentRepository($http) {
+    .factory('CommentRepository', function CommentRepository($http, BASE_API_URL) {
         return {
             getForPost: async (id) => {
                 return $http
-                    .get(`https://api.github.com/repos/xepozz/blogit/issues/${id}/comments?sort=created`)
+                    .get(`${BASE_API_URL}/issues/${id}/comments?sort=created`)
                     .then(response => {
                         console.log(response.data)
                         const comments = response.data.map(comment => createComment(comment))
