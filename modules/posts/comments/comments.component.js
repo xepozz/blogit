@@ -6,7 +6,7 @@ angular
         bindings: {
             post: '=',
         },
-        controller: function CommentController($q, $sce, $scope, CommentRepository) {
+        controller: function ($q, $sce, $scope, CommentRepository) {
             this.comments = []
             this.sanitizerConfig = {
                 // FORBID_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr'],

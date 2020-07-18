@@ -6,7 +6,7 @@ angular
         bindings: {
             post: '=',
         },
-        controller: function PostController($sce) {
+        controller: function ($sce) {
             this.commentsLoaded = false
             this.showSpinner = true
             this.loadComments = () => {
