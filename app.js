@@ -1,8 +1,8 @@
 angular
-    .module('app', ['ngStorage', 'posts'])
+    .module('app', ['ngStorage', 'posts', 'authorizationModule'])
     .config(function ($httpProvider, $provide, $localStorageProvider) {
-        $localStorageProvider.get('Github') || $localStorageProvider.set('Github', {token: ''})
-        $httpProvider.defaults.headers.common.Authorization = 'token ' + $localStorageProvider.get('Github').token;
+        const token = atob($localStorageProvider.get('github').token);
+        $httpProvider.defaults.headers.common.Authorization = 'token ' + token;
         $provide.constant('BASE_API_URL', 'https://api.github.com/repos/xepozz/blogit')
     })
     .directive('main', function () {

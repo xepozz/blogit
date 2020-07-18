@@ -5,7 +5,6 @@ angular
             .when('/', {
                 template: '<posts></posts>'
             })
-            .otherwise('/')
         ;
     })
 ;
