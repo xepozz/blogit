@@ -5,6 +5,7 @@ angular
         restrict: 'E',
         controller: function ($localStorage) {
             this.token = ''
+            this.isTokenStored = $localStorage.github && $localStorage.github.token
 
             this.storeToken = () => {
                 $localStorage.github = {token: btoa(this.token)}

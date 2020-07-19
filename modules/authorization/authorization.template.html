@@ -10,6 +10,7 @@
     make new token, copy and paste it into an input above.
 </p>
 
+<div ng-if="$ctrl.isTokenStored" class="alert alert-danger">You already have stored token</div>
 <form ng-submit="$ctrl.storeToken()">
     <div class="row g-3">
         <div class="col-auto">
