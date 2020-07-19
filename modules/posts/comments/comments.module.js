@@ -1,6 +1,6 @@
 angular
     .module('commentsModule', [])
-    .factory('CommentRepository', function CommentRepository($http, BASE_API_URL) {
+    .factory('CommentRepository', function ($http, BASE_API_URL) {
         return {
             getForPost: async (id) => {
                 return $http

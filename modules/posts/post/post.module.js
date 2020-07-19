@@ -1,6 +1,6 @@
 angular
     .module('postModule', ['ngRoute', 'commentsModule'])
-    .config(['$routeProvider', function config($routeProvider) {
+    .config(function ($routeProvider) {
         $routeProvider
             .when('/post/:id', {
                 template: '<post post="$resolve.post"></post>',
@@ -11,13 +11,13 @@ angular
                 }
             })
         ;
-    }])
-    .factory('PostRepository', function PostRepository($http, BASE_API_URL) {
+    })
+    .factory('PostRepository', function ($http, BASE_API_URL) {
         return {
             getById: async (id) => {
                 id = Number(id)
                 return $http
-                    .get(`${BASE_API_URL}/issues/${id}?state=open&sort=created`)
+                    .get(`${BASE_API_URL}/issues/${id}?state=open`)
                     .then(response => {
                         const post = createPostFromIssue(response.data);
                         console.log(response.data)
@@ -36,9 +36,8 @@ angular
                     url += '&per_page=' + filter.limit
                 }
                 if (filter.offset) {
-                    url += '&page=' + (filter.offset)
+                    url += '&page=' + filter.offset
                 }
-                console.log(url)
                 return $http
                     .get(url)
                     .then(response => {
@@ -86,6 +85,7 @@ function Author(username, url, avatarUrl) {
 function createPostsFromIssueList(issueList) {
     return issueList.map(issue => createPostFromIssue(issue))
 }
+
 function createPostFromIssue(issue) {
     const author = new Author(issue.user.login, issue.user.html_url, issue.user.avatar_url);
     const tags = issue.labels.map((label) => label.name);
