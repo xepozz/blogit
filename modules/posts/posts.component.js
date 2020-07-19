@@ -3,43 +3,31 @@ angular
     .component('posts', {
         templateUrl: 'modules/posts/posts.template.html',
         restrict: 'E',
-        controller: function ($scope, $http, $q, PostRepository) {
+        controller: function ($scope, $http, $q, PostRepository, $routeParams) {
             this.posts = [];
             this.canLoadNext = true
-            this.currentPage = 0
+            this.currentPage = 1
             this.showSpinner = true
-
-            this.availablePosts = {
-                0: [1, 2],
-                1: [],
-            };
+            this.pageSize = Math.max(Number($routeParams.pageSize || 1), 1);
 
             this.loadNext = () => {
                 this.showSpinner = true
                 this.loadNextPage()
             }
             this.loadNextPage = function () {
-                const posts = this.availablePosts[this.currentPage] ?? []
-
-                console.log('Load page', this.currentPage, 'posts', posts)
-                const promises = [];
-                for (const id of posts) {
-                    promises.push(PostRepository.loadPost(id))
-                }
+                console.log('Load page', this.currentPage)
+                const filter = new PostRepositoryFilter('open', this.pageSize, this.currentPage)
                 $q
-                    .all(promises)
-                    .then(posts => {
-                        console.log(posts)
-                        const sortedPosts = posts.sort((a, b) => a.id > b.id)
-                        this.posts.push(...sortedPosts)
+                    .resolve(PostRepository.getByFilter(filter))
+                    .then(results => {
+                        this.posts.push(...results)
                         this.showSpinner = false
+                        this.canLoadNext = results.length === this.pageSize && (this.posts.length % this.pageSize) === 0
                     })
-
                 this.currentPage++
-                this.canLoadNext = this.availablePosts.length !== this.posts.length
             }
             this.$onInit = () => {
-                this.loadNextPage(this.currentPage)
+                this.loadNext()
             }
         }
     })
