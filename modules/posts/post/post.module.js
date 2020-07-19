@@ -38,6 +38,10 @@ angular
                 if (filter.offset) {
                     url += '&page=' + filter.offset
                 }
+                if (filter.tag) {
+                    url += '&labels=' + filter.tag
+                }
+                console.log(url)
                 return $http
                     .get(url)
                     .then(response => {
@@ -52,11 +56,12 @@ angular
     })
 ;
 
-function PostRepositoryFilter(state, limit, offset) {
+function PostRepositoryFilter(limit, offset, tag) {
     return {
-        state: state,
         limit: limit,
         offset: offset,
+        state: 'open',
+        tag: tag,
     }
 }
 

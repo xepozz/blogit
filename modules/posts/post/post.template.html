@@ -9,7 +9,7 @@
         <a href="#!/post/{{ $ctrl.post.id }}" class="text-decoration-none"># {{ $ctrl.post.title }}</a>
     </h2>
     <p class="blog-post-meta" ng-if="$ctrl.post.tags.length">
-        Tags: <a href="#" ng-repeat="tag in $ctrl.post.tags" class="pr-2">#{{ tag }}</a>
+        Tags: <a href="#!/tag/{{ tag }}" ng-repeat="tag in $ctrl.post.tags" class="pr-2">#{{ tag }}</a>
     </p>
     <span ng-bind-html="$ctrl.post.body" class="markdown-body"></span>
     <p class="blog-post-meta">

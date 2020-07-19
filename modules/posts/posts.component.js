@@ -2,6 +2,9 @@ angular
     .module('posts', ['postModule'])
     .component('posts', {
         templateUrl: 'modules/posts/posts.template.html',
+        bindings:{
+            tag: '<'
+        },
         restrict: 'E',
         controller: function ($scope, $http, $q, PostRepository, $routeParams) {
             this.posts = [];
@@ -16,15 +19,15 @@ angular
             }
             this.loadNextPage = function () {
                 console.log('Load page', this.currentPage)
-                const filter = new PostRepositoryFilter('open', this.pageSize, this.currentPage)
+                const filter = new PostRepositoryFilter(this.pageSize, this.currentPage, this.tag)
                 $q
                     .resolve(PostRepository.getByFilter(filter))
                     .then(results => {
                         this.posts.push(...results)
                         this.showSpinner = false
                         this.canLoadNext = results.length === this.pageSize && (this.posts.length % this.pageSize) === 0
+                        this.currentPage++
                     })
-                this.currentPage++
             }
             this.$onInit = () => {
                 this.loadNext()
