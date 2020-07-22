@@ -24,7 +24,7 @@ then
 else
   echo "==> Caught updates, trying to apply..."
   cd ${TEMP_DIR}
-  git diff ${CURRENT_RELEASE} ${LAST_RELEASE} > ${TEMP_DIR}/.patch
+  git diff --unified=0 ${CURRENT_RELEASE} ${LAST_RELEASE} > ${TEMP_DIR}/.patch
   cd ${CURRENT_DIR}
   patch -p1 < ${TEMP_DIR}/.patch
 
