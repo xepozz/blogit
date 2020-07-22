@@ -26,7 +26,7 @@ else
   cd ${TEMP_DIR}
   git diff ${CURRENT_RELEASE} ${LAST_RELEASE} > ${TEMP_DIR}/.patch
   cd ${CURRENT_DIR}
-  git apply ${TEMP_DIR}/.patch
+  patch -p1 < ${TEMP_DIR}/.patch
 
   if [[ $? -eq 0 ]]
   then
