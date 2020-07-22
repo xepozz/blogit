@@ -2,27 +2,27 @@ TEMP_DIR=/tmp/temp/blogit
 CONFIG_FILE=.blogit
 CURRENT_DIR=`pwd`
 
-echo "Cleaning directory with another releases"
+echo "==> Cleaning directory with another releases"
 rm -rf ${TEMP_DIR}
 
-echo "Cloning repository into ${TEMP_DIR}"
+echo "==> Cloning repository into ${TEMP_DIR}"
 git clone git@github.com:xepozz/blogit ${TEMP_DIR}
 
 LAST_RELEASE=`cat ${TEMP_DIR}/.git/refs/heads/master`
-echo "Last release hash: ${LAST_RELEASE}"
+echo "[Info] Last release hash: ${LAST_RELEASE}"
 
 if [ -f ${CONFIG_FILE} ]
 then
 . ${CONFIG_FILE}
 fi
 
-echo "Current release hash: ${CURRENT_RELEASE}"
+echo "[Info] Current release hash: ${CURRENT_RELEASE}"
 
 if [[ "${LAST_RELEASE}" = "${CURRENT_RELEASE}" ]]
 then
-  echo "Blogit is up to date"
+  echo "[Info] System is up to date"
 else
-  echo "Catched updates, trying to apply..."
+  echo "==> Caught updates, trying to apply..."
   cd ${TEMP_DIR}
   git diff ${CURRENT_RELEASE} ${LAST_RELEASE} > ${TEMP_DIR}/.patch
   cd ${CURRENT_DIR}
@@ -30,13 +30,19 @@ else
 
   if [[ $? -eq 0 ]]
   then
-    echo "System was updated successfully"
+    echo ""
+    echo "[Info] System was updated successfully"
+    echo "[Info] Please review updates and commit them"
+    echo ""
   else
-    echo "Updates conflicts with your system"
-    echo "Files with conflicts: `git status --short | grep "^UU "`"
+    echo ""
+    echo "[Warning] Updates conflicts with your system"
+    echo "[Warning] Files with conflicts: `git status --short | grep "^UU "`"
+    echo ""
   fi
 
-  echo "Saving last release hash ${LAST_RELEASE}"
+  echo ""
+  echo "==> Saving last release hash ${LAST_RELEASE}"
   if [ -f ${CONFIG_FILE} ]
   then
     sed -i "s/CURRENT_RELEASE=.*/CURRENT_RELEASE=${LAST_RELEASE}/g" ${CONFIG_FILE}
@@ -44,5 +50,6 @@ else
     echo "CURRENT_RELEASE=${LAST_RELEASE}" > ${CONFIG_FILE}
   fi
 
+  echo "[Info] Update completed"
 fi
 
