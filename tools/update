@@ -33,8 +33,13 @@ else
     echo "Files with conflicts: `git status --short | grep "^UU "`"
   fi
 
-  echo "Saving last release hash"
-  sed -i "s/CURRENT_RELEASE=.*/CURRENT_RELEASE=${LAST_RELEASE}/g" ${CONFIG_FILE}
+  echo "Saving last release hash ${LAST_RELEASE}"
+  if [ -f ${CONFIG_FILE} ]
+  then
+    sed -i "s/CURRENT_RELEASE=.*/CURRENT_RELEASE=${LAST_RELEASE}/g" ${CONFIG_FILE}
+  else
+    echo "CURRENT_RELEASE=${LAST_RELEASE}" > ${CONFIG_FILE}
+  fi
 
 fi
 
