@@ -22,8 +22,8 @@ angular
                         const post = createPostFromIssue(response.data);
                         console.log(response.data)
                         console.log(post)
-                        if (!('published' in post.tags)) {
-                            return null
+                        if (!post.tags.includes('published')) {
+                            throw new Error("You can't see unpublished posts.")
                         }
 
                         return post
