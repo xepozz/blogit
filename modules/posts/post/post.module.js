@@ -38,8 +38,9 @@ angular
                 if (filter.offset) {
                     url += '&page=' + filter.offset
                 }
+                url += '&labels=published'
                 if (filter.tag) {
-                    url += '&labels=' + filter.tag
+                    url += ',' + filter.tag
                 }
                 console.log(url)
                 return $http
