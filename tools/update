@@ -1,0 +1,37 @@
+TEMP_DIR=/tmp/temp/blogit
+
+echo "Cleaning directory with another releases"
+rm -rf ${TEMP_DIR}
+
+echo "Cloning repository into ${TEMP_DIR}"
+git clone git@github.com:xepozz/blogit ${TEMP_DIR}
+
+LAST_RELEASE=`cat ${TEMP_DIR}/.git/refs/heads/master`
+echo "Last release hash: ${LAST_RELEASE}"
+
+. .blogit
+
+echo "Current release hash: ${CURRENT_RELEASE}"
+
+if [[ ${LAST_RELEASE} -eq ${CURRENT_RELEASE} ]]
+then
+  echo "Blogit is up to date"
+else
+  echo "Catched updates, trying to apply..."
+  git diff ${CURRENT_RELEASE} ${LAST_RELEASE} > ${TEMP_DIR}/.patch
+  git diff ${CURRENT_RELEASE} ${LAST_RELEASE}
+  git apply ${TEMP_DIR}/.patch
+
+  if [[ $? -eq 0 ]]
+  then
+    echo "System was updated successfully"
+  else
+    echo "Updates conflicts with your system"
+    echo "Files with conflicts: `git status --short | grep "^UU "`"
+  fi
+
+  echo "Saving last release hash"
+  sed -i "s/CURRENT_RELEASE=.*/CURRENT_RELEASE=${LAST_RELEASE}/g" .blogit
+
+fi
+
