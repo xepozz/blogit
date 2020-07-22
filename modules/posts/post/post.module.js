@@ -22,6 +22,9 @@ angular
                         const post = createPostFromIssue(response.data);
                         console.log(response.data)
                         console.log(post)
+                        if (!('published' in post.tags)) {
+                            return null
+                        }
 
                         return post
                     })
