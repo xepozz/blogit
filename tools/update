@@ -1,5 +1,6 @@
 TEMP_DIR=/tmp/temp/blogit
 CONFIG_FILE=.blogit
+CURRENT_DIR=`pwd`
 
 echo "Cleaning directory with another releases"
 rm -rf ${TEMP_DIR}
@@ -17,12 +18,14 @@ fi
 
 echo "Current release hash: ${CURRENT_RELEASE}"
 
-if [[ ${LAST_RELEASE} -eq ${CURRENT_RELEASE} ]]
+if [[ "${LAST_RELEASE}" = "${CURRENT_RELEASE}" ]]
 then
   echo "Blogit is up to date"
 else
   echo "Catched updates, trying to apply..."
+  cd ${TEMP_DIR}
   git diff ${CURRENT_RELEASE} ${LAST_RELEASE} > ${TEMP_DIR}/.patch
+  cd ${CURRENT_DIR}
   git apply ${TEMP_DIR}/.patch
 
   if [[ $? -eq 0 ]]
