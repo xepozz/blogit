@@ -1,9 +1,13 @@
 angular
     .module('app', ['ngStorage', 'posts', 'authorizationModule'])
-    .config(function ($httpProvider, $provide, $localStorageProvider) {
-        const token = atob($localStorageProvider.get('github')?.token);
-        $httpProvider.defaults.headers.common.Authorization = 'token ' + token;
+    .config(function ($provide) {
         $provide.constant('BASE_API_URL', 'https://api.github.com/repos/xepozz/blogit')
+    })
+    .factory('Base64Encoder', function () {
+        return {
+            encode: (value) => btoa(unescape(encodeURIComponent(value))),
+            decode: (value) => decodeURIComponent(escape(atob(value))),
+        }
     })
     .directive('main', function () {
         return {
@@ -28,5 +32,9 @@ angular
             restrict: 'A',
             templateUrl: 'template/layout/footer.html',
         };
+    })
+    .run(function ($http, $localStorage, Base64Encoder) {
+        const token = Base64Encoder.decode($localStorage.github?.token);
+        $http.defaults.headers.common.Authorization = 'token ' + token;
     })
 ;
