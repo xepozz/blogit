@@ -1,7 +1,7 @@
 angular
-    .module('app', ['ngStorage', 'posts', 'authorizationModule'])
-    .config(function ($provide) {
-        $provide.constant('BASE_API_URL', 'https://api.github.com/repos/xepozz/blogit')
+    .module('app', ['config','ngStorage', 'posts', 'authorizationModule'])
+    .config(function ($logProvider, DEBUG_ENABLED){
+        $logProvider.debugEnabled(DEBUG_ENABLED)
     })
     .factory('Base64Encoder', function () {
         return {
