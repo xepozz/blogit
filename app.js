@@ -34,7 +34,9 @@ angular
         };
     })
     .run(function ($http, $localStorage, Base64Encoder) {
-        const token = Base64Encoder.decode($localStorage.github?.token);
-        $http.defaults.headers.common.Authorization = 'token ' + token;
+        if ($localStorage.github?.token) {
+            const token = Base64Encoder.decode($localStorage.github?.token);
+            $http.defaults.headers.common.Authorization = 'token ' + token;
+        }
     })
 ;
