@@ -18,7 +18,6 @@ angular
                 this.loadNextPage()
             }
             this.loadNextPage = function () {
-                console.log('Load page', this.currentPage)
                 const filter = new PostRepositoryFilter(this.pageSize, this.currentPage, this.tag)
                 $q
                     .resolve(PostRepository.getByFilter(filter))

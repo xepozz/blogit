@@ -12,16 +12,16 @@ angular
             })
         ;
     })
-    .factory('PostRepository', function ($http, BASE_API_URL) {
+    .factory('PostRepository', function ($http, BASE_API_URL, $log) {
         return {
             getById: async (id) => {
                 id = Number(id)
                 return $http
                     .get(`${BASE_API_URL}/issues/${id}?state=open`)
                     .then(response => {
+                        $log.debug('response', response.config.url, response.data)
                         const post = createPostFromIssue(response.data);
-                        console.log(response.data)
-                        console.log(post)
+                        $log.debug('post', post)
                         if (!post.tags.includes('published')) {
                             throw new Error("You can't see unpublished posts.")
                         }
@@ -45,13 +45,12 @@ angular
                 if (filter.tag) {
                     url += ',' + filter.tag
                 }
-                console.log(url)
                 return $http
                     .get(url)
                     .then(response => {
+                        $log.debug('response', response.config.url, response.data)
                         const posts = createPostsFromIssueList(response.data);
-                        console.log(response.data)
-                        console.log('posts', posts)
+                        $log.debug('posts', postss)
 
                         return posts
                     })
