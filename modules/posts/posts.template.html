@@ -1,13 +1,16 @@
-<div>
+<div ng-if="!$ctrl.posts.length">
+    <div ng-if="!$ctrl.showSpinner">
+        <empty-posts-stub></empty-posts-stub>
+    </div>
+    <spinner show-spinner="$ctrl.showSpinner"></spinner>
+</div>
+
+<div ng-if="$ctrl.posts.length">
     <div ng-repeat="post in $ctrl.posts track by $index">
         <post post="post"></post>
     </div>
     <nav class="blog-pagination">
-        <div ng-if="$ctrl.showSpinner" class="mb-3 ml-3">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
+        <spinner show-spinner="$ctrl.showSpinner"></spinner>
         
         <div ng-if="!$ctrl.showSpinner">
             <button ng-class="['btn', 'btn-outline-primary', {disabled: !$ctrl.canLoadNext}]"

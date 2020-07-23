@@ -12,7 +12,7 @@ angular
             })
         ;
     })
-    .factory('PostRepository', function ($http, BASE_API_URL, $log) {
+    .factory('PostRepository', function ($http, $log, BASE_API_URL, POST_REQUIRED_TAGS) {
         return {
             getById: async (id) => {
                 id = Number(id)
@@ -22,7 +22,7 @@ angular
                         $log.debug('response', response.config.url, response.data)
                         const post = createPostFromIssue(response.data);
                         $log.debug('post', post)
-                        if (!post.tags.includes('published')) {
+                        if (!post.tags.includesArray(POST_REQUIRED_TAGS)) {
                             throw new Error("You can't see unpublished posts.")
                         }
 
@@ -41,7 +41,7 @@ angular
                 if (filter.offset) {
                     url += '&page=' + filter.offset
                 }
-                url += '&labels=published'
+                url += '&labels=' + POST_REQUIRED_TAGS.join(',')
                 if (filter.tag) {
                     url += ',' + filter.tag
                 }
@@ -50,7 +50,7 @@ angular
                     .then(response => {
                         $log.debug('response', response.config.url, response.data)
                         const posts = createPostsFromIssueList(response.data);
-                        $log.debug('posts', postss)
+                        $log.debug('posts', posts)
 
                         return posts
                     })

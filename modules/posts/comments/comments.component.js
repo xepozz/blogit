@@ -6,7 +6,7 @@ angular
         bindings: {
             post: '=',
         },
-        controller: function ($q, $sce, $scope, CommentRepository) {
+        controller: function ($q, $sce, $scope, CommentRepository, HtmlSanitizer) {
             this.comments = []
             this.sanitizerConfig = {
                 // FORBID_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr'],
@@ -21,10 +21,7 @@ angular
                     .then(comments => {
                         this.comments = comments.map(comment => {
                             comment.body = $sce.trustAsHtml(
-                                DOMPurify.sanitize(
-                                    marked(comment.body),
-                                    this.sanitizerConfig
-                                )
+                                HtmlSanitizer.sanitize(marked(comment.body))
                             )
                             return comment
                         })

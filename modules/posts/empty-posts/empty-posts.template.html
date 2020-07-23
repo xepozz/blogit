@@ -1,0 +1,20 @@
+<div class="p-5">
+    <h2>No posts found</h2>
+    <p>
+        It seems you have no one published post.
+    </p>
+    <p>
+        If you want to make new post you should do some steps:
+    </p>
+    <ul>
+        <li>Open <a href="{{ $ctrl.issuesLink }}" target="_blank">Issues</a></li>
+        <li>Click "New issue" button</li>
+        <li>Type <i>title</i> and <i>body</i></li>
+        <li ng-if="$ctrl.requiredTags.length">
+            Select needed <b>required</b>
+            {{ $ctrl.requiredTags.length === 1 ? 'label' : 'labels' }}:
+            <span ng-bind-html="$ctrl.requiredTagsList"></span>
+        </li>
+    </ul>
+    Or just open <a href="{{ $ctrl.newIssueLink }}" target="_blank"><b>this link</b></a> and submit the form.
+</div>

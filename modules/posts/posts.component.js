@@ -1,5 +1,5 @@
 angular
-    .module('posts', ['postModule'])
+    .module('posts', ['postModule', 'emptyPostsModule'])
     .component('posts', {
         templateUrl: 'modules/posts/posts.template.html',
         bindings:{
