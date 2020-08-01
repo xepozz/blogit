@@ -44,6 +44,18 @@ This is a personal blog CMS based on Github Pages and uses Github Issues as its 
 - Make comments moderated
 - Make real modular system
 
+### Contributing
+
+Any comments and suggestions are welcome.
+If you:
+- You know how to competently solve this or that problem or task
+- Want to add new functionality or refactor
+- Help in promotion and stuff
+then feel free to create and write to Issue/Pull Requests.
+
+At least 1 example of a blog that will work on this CMS: https://dderepko.ru
+
+***
 
 # Русский
 
@@ -91,3 +103,14 @@ This is a personal blog CMS based on Github Pages and uses Github Issues as its 
 - Сделать голосование в постах
 - Сделать модерацию комментариев
 - Реальная модульная система
+
+### Как можно помочь проекту?
+
+Я буду рад любым комментариям и предложениям.
+Если вы:
+- Знаете, как грамотно решить ту или иную проблему или задачу
+- Хотите добавить новую фунальность или произвести рефакторинг
+- Помочь в продвижении и прочее
+то смело создавайте и пишите в Issue/Pull Request'ы.
+
+Как минимум 1 пример блога, который будет работать на этой CMS: https://dderepko.ru
