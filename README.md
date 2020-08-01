@@ -53,7 +53,10 @@ If you:
 - Help in promotion and stuff
 then feel free to create and write to Issue/Pull Requests.
 
-At least 1 example of a blog that will work on this CMS: https://dderepko.ru
+Demo of the project is available on https://xepozz.github.io/blogit/
+
+And also I will try do not forget about my blog and write my thoughts in it.
+Subscribe: https://dderepko.ru
 
 ***
 
@@ -113,4 +116,8 @@ At least 1 example of a blog that will work on this CMS: https://dderepko.ru
 - Помочь в продвижении и прочее
 то смело создавайте и пишите в Issue/Pull Request'ы.
 
-Как минимум 1 пример блога, который будет работать на этой CMS: https://dderepko.ru
+Демонстрация проекта будет происходить по адресу https://xepozz.github.io/blogit/
+
+
+А также я постараюсь не забывать про свой блог и писать в нём свои мысли. 
+Подписывайтесь: https://dderepko.ru
