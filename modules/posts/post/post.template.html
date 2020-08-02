@@ -8,26 +8,40 @@
         Tags: <a href="#!/tag/{{ tag }}" ng-repeat="tag in $ctrl.post.tags" class="pr-2">#{{ tag }}</a>
     </p>
     <span ng-bind-html="$ctrl.post.body" class="markdown-body"></span>
-    <p class="blog-post-meta">
-        <span>
-            <span title="{{ $ctrl.post.createdAt | date: 'medium' }}">
-                {{ $ctrl.post.createdAt | date: "d MMM yyyy 'at' H:mm"}}
-            </span>
-            by
-            <a href="{{ $ctrl.post.author.url }}" target="_blank">
-                @{{ $ctrl.post.author.username }}
-            </a>
-        </span>
-        <span ng-if="$ctrl.post.commentsCount" class="pl-1">
-            <a ng-click="$ctrl.loadComments()"
-               href="#"
-               class="link-secondary "
-               data-target="#comments-{{ $ctrl.post.id }}"
-               data-toggle="collapse"
-            >
-                 Comments ({{ $ctrl.post.commentsCount }})
-            </a>
-        </span>
-    </p>
+    
+    <div class="blog-post-meta mt-1">
+        <div class="border border-light px-2 py-1">
+            <div class="btn-group btn-outline-light">
+                <button type="button" class="btn btn-light btn-sm">
+                    👍 <span class="badge bg-success">{{ $ctrl.likesCount }}</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-light">
+                    👎 <span class="badge bg-danger">{{ $ctrl.dislikesCount }}</span>
+                </button>
+            </div>
+            <div class="d-inline align-middle">
+                <span>
+                    <span title="{{ $ctrl.post.createdAt | date: 'medium' }}">
+                        {{ $ctrl.post.createdAt | date: "d MMM yyyy 'at' H:mm"}}
+                    </span>
+                    by
+                    <a href="{{ $ctrl.post.author.url }}" target="_blank">
+                        @{{ $ctrl.post.author.username }}
+                    </a>
+                </span>
+                <span ng-if="$ctrl.post.commentsCount" class="pl-1">
+                    <a ng-click="$ctrl.loadComments()"
+                       href="#"
+                       class="link-secondary "
+                       data-target="#comments-{{ $ctrl.post.id }}"
+                       data-toggle="collapse"
+                    >
+                         Comments ({{ $ctrl.post.commentsCount }})
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+    
     <comments post="$ctrl.post" ng-if="$ctrl.commentsLoaded"></comments>
 </div>

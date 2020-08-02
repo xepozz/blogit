@@ -14,6 +14,35 @@ angular
     })
     .factory('PostRepository', function ($http, $log, BASE_API_URL, POST_REQUIRED_TAGS) {
         return {
+            initializeReactionCounters: async (id) => {
+                let reactionCounters = {
+                    '+1': 0,
+                    '-1': 0,
+                    'laugh': 0,
+                    'confused': 0,
+                    'heart': 0,
+                    'hooray': 0,
+                    'rocket': 0,
+                    'eyes': 0,
+                }
+                return $http
+                    .get(`${BASE_API_URL}/issues/${id}/reactions`, {
+                        headers: {
+                            Accept: 'application/vnd.github.squirrel-girl-preview+json',
+                        }
+                    })
+                    .then(response => {
+                        $log.debug('response', response.config.url, response.data)
+                        response.data.map(data => {
+                            const emoji = data.content;
+                            if (reactionCounters.hasOwnProperty(emoji)) {
+                                reactionCounters[emoji]++
+                            }
+                        })
+
+                        return reactionCounters;
+                    })
+            },
             getById: async (id) => {
                 id = Number(id)
                 return $http
