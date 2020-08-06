@@ -21,7 +21,7 @@ angular
                     .then(comments => {
                         this.comments = comments.map(comment => {
                             comment.body = $sce.trustAsHtml(
-                                HtmlSanitizer.sanitize(marked(comment.body))
+                                HtmlSanitizer.sanitize(comment.body)
                             )
                             return comment
                         })

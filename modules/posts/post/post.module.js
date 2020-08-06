@@ -47,7 +47,11 @@ angular
             getById: async (id) => {
                 id = Number(id)
                 return $http
-                    .get(`${BASE_API_URL}/issues/${id}?state=open`)
+                    .get(`${BASE_API_URL}/issues/${id}?state=open`, {
+                        headers:{
+                            Accept: 'application/vnd.github.VERSION.html+json'
+                        }
+                    })
                     .then(response => {
                         $log.debug('response', response.config.url, response.data)
                         const post = createPostFromIssue(response.data);
@@ -76,7 +80,11 @@ angular
                     url += ',' + filter.tag
                 }
                 return $http
-                    .get(url)
+                    .get(url, {
+                        headers:{
+                            Accept: 'application/vnd.github.VERSION.html+json'
+                        }
+                    })
                     .then(response => {
                         $log.debug('response', response.config.url, response.data)
                         const posts = createPostsFromIssueList(response.data);
@@ -141,5 +149,5 @@ function createPostFromIssue(issue) {
     const author = new Author(issue.user.login, issue.user.html_url, issue.user.avatar_url);
     const tags = issue.labels.map((label) => label.name);
 
-    return new Post(issue.number, issue.title, issue.body, author, tags, issue.comments, issue.created_at)
+    return new Post(issue.number, issue.title, issue.body_html, author, tags, issue.comments, issue.created_at)
 }
