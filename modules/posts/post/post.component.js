@@ -16,10 +16,10 @@ angular
 
             this.$onInit = () => {
                 $q
-                    .resolve(PostRepository.initializeReactionCounters(this.post.id))
+                    .resolve(PostRepository.getReactionCounters(this.post.id))
                     .then(result => {
-                        this.likesCount = result["+1"]
-                        this.dislikesCount = result["-1"]
+                        this.likesCount = result.thumbUp
+                        this.dislikesCount = result.thumbDown
                     });
 
                 this.post.body = $sce.trustAsHtml(marked(this.post.body))

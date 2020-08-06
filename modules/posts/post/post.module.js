@@ -14,17 +14,7 @@ angular
     })
     .factory('PostRepository', function ($http, $log, BASE_API_URL, POST_REQUIRED_TAGS) {
         return {
-            initializeReactionCounters: async (id) => {
-                let reactionCounters = {
-                    '+1': 0,
-                    '-1': 0,
-                    'laugh': 0,
-                    'confused': 0,
-                    'heart': 0,
-                    'hooray': 0,
-                    'rocket': 0,
-                    'eyes': 0,
-                }
+            getReactionCounters: async (id) => {
                 return $http
                     .get(`${BASE_API_URL}/issues/${id}/reactions`, {
                         headers: {
@@ -33,6 +23,16 @@ angular
                     })
                     .then(response => {
                         $log.debug('response', response.config.url, response.data)
+                        let reactionCounters = {
+                            '+1': 0,
+                            '-1': 0,
+                            'laugh': 0,
+                            'confused': 0,
+                            'heart': 0,
+                            'hooray': 0,
+                            'rocket': 0,
+                            'eyes': 0,
+                        }
                         response.data.map(data => {
                             const emoji = data.content;
                             if (reactionCounters.hasOwnProperty(emoji)) {
@@ -40,7 +40,8 @@ angular
                             }
                         })
 
-                        return reactionCounters;
+                        const arguments = Object.entries(reactionCounters).map(property => property[1]);
+                        return ReactionCounters.apply(null, arguments);
                     })
             },
             getById: async (id) => {
@@ -87,6 +88,19 @@ angular
         };
     })
 ;
+
+function ReactionCounters(thumbUp, thumbDown, laugh, confused, heart, hooray, rocket, eyes) {
+    return {
+        thumbUp: thumbUp,
+        thumbDown: thumbDown,
+        laugh: laugh,
+        confused: confused,
+        heart: heart,
+        hooray: hooray,
+        rocket: rocket,
+        eyes: eyes,
+    }
+}
 
 function PostRepositoryFilter(limit, offset, tag) {
     return {
