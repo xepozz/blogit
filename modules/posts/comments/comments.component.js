@@ -8,12 +8,6 @@ angular
         },
         controller: function ($q, $sce, $scope, CommentRepository, HtmlSanitizer) {
             this.comments = []
-            this.sanitizerConfig = {
-                // FORBID_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr'],
-                ALLOWED_TAGS: ['b', 'i', 'u', 'a', 'br', 'p', 'code', 'span', 'pre'],
-                FORBID_ATTR: ['style'],
-                IN_PLACE: true
-            }
             this.showSpinner = true
             this.$onInit = function () {
                 $q
