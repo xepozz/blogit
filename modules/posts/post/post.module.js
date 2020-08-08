@@ -12,7 +12,29 @@ angular
             })
         ;
     })
-    .factory('PostRepository', function ($http, $log, BASE_API_URL, POST_REQUIRED_TAGS) {
+    .factory('PostFactory', function (POST_REQUIRED_TAGS) {
+        function createFromIssue(issue) {
+            const author = new Author(issue.user.login, issue.user.html_url, issue.user.avatar_url);
+            let tags = issue.labels.map((label) => label.name);
+
+            if (!tags.includesArray(POST_REQUIRED_TAGS)) {
+                throw new Error("You can't see unpublished posts.")
+            }
+            tags = tags.filter(n => !POST_REQUIRED_TAGS.includes(n))
+
+            return new Post(issue.number, issue.title, issue.body_html, author, tags, issue.comments, issue.created_at);
+        }
+
+        function createFromIssueList(issueList) {
+            return issueList.map(issue => createFromIssue(issue))
+        }
+
+        return {
+            createFromIssue: createFromIssue,
+            createFromIssueList: createFromIssueList,
+        }
+    })
+    .factory('PostRepository', function ($http, $log, PostFactory, BASE_API_URL, POST_REQUIRED_TAGS) {
         return {
             getReactionCounters: async (id) => {
                 return $http
@@ -48,18 +70,14 @@ angular
                 id = Number(id)
                 return $http
                     .get(`${BASE_API_URL}/issues/${id}?state=open`, {
-                        headers:{
+                        headers: {
                             Accept: 'application/vnd.github.VERSION.html+json'
                         }
                     })
                     .then(response => {
                         $log.debug('response', response.config.url, response.data)
-                        const post = createPostFromIssue(response.data);
+                        const post = PostFactory.createFromIssue(response.data);
                         $log.debug('post', post)
-                        if (!post.tags.includesArray(POST_REQUIRED_TAGS)) {
-                            throw new Error("You can't see unpublished posts.")
-                        }
-
                         return post
                     })
             },
@@ -81,13 +99,13 @@ angular
                 }
                 return $http
                     .get(url, {
-                        headers:{
+                        headers: {
                             Accept: 'application/vnd.github.VERSION.html+json'
                         }
                     })
                     .then(response => {
                         $log.debug('response', response.config.url, response.data)
-                        const posts = createPostsFromIssueList(response.data);
+                        const posts = PostFactory.createFromIssueList(response.data);
                         $log.debug('posts', posts)
 
                         return posts
@@ -139,15 +157,4 @@ function Author(username, url, avatarUrl) {
         url: url,
         avatarUrl: avatarUrl,
     }
-}
-
-function createPostsFromIssueList(issueList) {
-    return issueList.map(issue => createPostFromIssue(issue))
-}
-
-function createPostFromIssue(issue) {
-    const author = new Author(issue.user.login, issue.user.html_url, issue.user.avatar_url);
-    const tags = issue.labels.map((label) => label.name);
-
-    return new Post(issue.number, issue.title, issue.body_html, author, tags, issue.comments, issue.created_at)
 }
