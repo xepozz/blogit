@@ -73,8 +73,8 @@ angular
         return {
             createFromString: (string) => {
                 const parts = String(string).split(' ')
-                const minutes = parseInt(parts.find(part => part.includes('min')))
-                const hours = parseInt(parts.find(part => part.includes('hour')))
+                const minutes = parseInt(parts.find(part => part.includes('min'))) || 0
+                const hours = parseInt(parts.find(part => part.includes('hour'))) || 0
 
                 return {
                     minutes: minutes,
