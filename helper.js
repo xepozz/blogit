@@ -20,9 +20,9 @@ angular
     .factory('PromiseCacheService', function ($q, $log, $localStorage) {
         $log.debug('$localStorage:', $localStorage)
 
-        function cloneResult(data) {
+        function softClone(data) {
             if (Array.isArray(data)) {
-                return data.map(item => cloneResult(item))
+                return data.map(item => softClone(item))
             }
 
             return Object.assign({}, data)
@@ -30,14 +30,20 @@ angular
 
         return {
             getOrSet: async (cacheKey, promiseInFunction) => {
-                if ($localStorage[cacheKey]) {
-                    $log.debug('Cache hit detected', cacheKey)
-                    return $q.resolve(Object.assign({}, $localStorage[cacheKey]))
+                let cacheItem = $localStorage[cacheKey];
+                if (cacheItem) {
+                    cacheItem = softClone(cacheItem)
+                    $log.debug('Cache hit detected', cacheKey, cacheItem)
+                    return $q.resolve(
+                        Array.isArray(cacheItem)
+                            ? cacheItem
+                            : Object.assign({}, cacheItem)
+                    )
                 }
                 $log.debug('No cache hit detected', cacheKey)
                 const promise = promiseInFunction();
                 const result = await promise;
-                $localStorage[cacheKey] = cloneResult(result)
+                $localStorage[cacheKey] = softClone(result)
                 return promise
             }
         }

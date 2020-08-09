@@ -107,20 +107,23 @@ angular
                 if (filter.tag) {
                     url += ',' + filter.tag
                 }
-                return $http
-                    .get(url, {
-                        headers: {
-                            Accept: 'application/vnd.github.VERSION.html+json'
-                        },
-                        cache: true,
-                    })
-                    .then(response => {
-                        $log.debug('response', response.config.url, response.data)
-                        const posts = PostFactory.createFromIssueList(response.data);
-                        $log.debug('posts', posts)
+                const cacheKey = 'posts-filter-' + Object.values(filter).join('-')
+                return PromiseCacheService.getOrSet(cacheKey, () =>
+                    $http
+                        .get(url, {
+                            headers: {
+                                Accept: 'application/vnd.github.VERSION.html+json'
+                            },
+                            cache: true,
+                        })
+                        .then(response => {
+                            $log.debug('response', response.config.url, response.data)
+                            const posts = PostFactory.createFromIssueList(response.data);
+                            $log.debug('posts', posts)
 
-                        return posts
-                    })
+                            return posts
+                        })
+                )
             }
         };
     })
