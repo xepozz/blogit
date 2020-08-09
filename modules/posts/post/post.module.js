@@ -91,7 +91,7 @@ angular
                             $log.debug('post', post)
                             return post
                         }),
-                    '2hours'
+                    '5hours'
                 )
             },
             getByFilter: async (filter) => {
@@ -127,7 +127,7 @@ angular
 
                             return posts
                         }),
-                    '4hours'
+                    '2hours'
                 )
             }
         };
