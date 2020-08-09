@@ -6,7 +6,8 @@ angular
                 template: '<post post="$resolve.post"></post>',
                 resolve: {
                     post: function (PostRepository, $route) {
-                        return PostRepository.getById($route.current.params.id);
+                        post = PostRepository.getById($route.current.params.id);
+                        return post
                     },
                 }
             })
@@ -34,52 +35,61 @@ angular
             createFromIssueList: createFromIssueList,
         }
     })
-    .factory('PostRepository', function ($http, $log, PostFactory, BASE_API_URL, POST_REQUIRED_TAGS) {
+    .factory('PostRepository', function ($http, $log, PostFactory, PromiseCacheService, $q, BASE_API_URL, POST_REQUIRED_TAGS) {
         return {
             getReactionCounters: async (id) => {
-                return $http
-                    .get(`${BASE_API_URL}/issues/${id}/reactions`, {
-                        headers: {
-                            Accept: 'application/vnd.github.squirrel-girl-preview+json',
-                        }
-                    })
-                    .then(response => {
-                        $log.debug('response', response.config.url, response.data)
-                        let reactionCounters = {
-                            '+1': 0,
-                            '-1': 0,
-                            'laugh': 0,
-                            'confused': 0,
-                            'heart': 0,
-                            'hooray': 0,
-                            'rocket': 0,
-                            'eyes': 0,
-                        }
-                        response.data.map(data => {
-                            const emoji = data.content;
-                            if (reactionCounters.hasOwnProperty(emoji)) {
-                                reactionCounters[emoji]++
-                            }
+                id = Number(id)
+                const cacheKey = 'reactions-id-' + id;
+                return PromiseCacheService.getOrSet(cacheKey, () =>
+                    $http
+                        .get(`${BASE_API_URL}/issues/${id}/reactions`, {
+                            headers: {
+                                Accept: 'application/vnd.github.squirrel-girl-preview+json',
+                            },
+                            cache: true,
                         })
+                        .then(response => {
+                            $log.debug('response', response.config.url, response.data)
+                            let reactionCounters = {
+                                '+1': 0,
+                                '-1': 0,
+                                'laugh': 0,
+                                'confused': 0,
+                                'heart': 0,
+                                'hooray': 0,
+                                'rocket': 0,
+                                'eyes': 0,
+                            }
+                            response.data.map(data => {
+                                const emoji = data.content;
+                                if (reactionCounters.hasOwnProperty(emoji)) {
+                                    reactionCounters[emoji]++
+                                }
+                            })
 
-                        const arguments = Object.entries(reactionCounters).map(property => property[1]);
-                        return ReactionCounters.apply(null, arguments);
-                    })
+                            const arguments = Object.entries(reactionCounters).map(property => property[1]);
+                            return ReactionCounters.apply(null, arguments)
+                        })
+                )
             },
             getById: async (id) => {
                 id = Number(id)
-                return $http
-                    .get(`${BASE_API_URL}/issues/${id}?state=open`, {
-                        headers: {
-                            Accept: 'application/vnd.github.VERSION.html+json'
-                        }
-                    })
-                    .then(response => {
-                        $log.debug('response', response.config.url, response.data)
-                        const post = PostFactory.createFromIssue(response.data);
-                        $log.debug('post', post)
-                        return post
-                    })
+                const cacheKey = 'post-id-' + id;
+                return PromiseCacheService.getOrSet(cacheKey, () =>
+                    $http
+                        .get(`${BASE_API_URL}/issues/${id}?state=open`, {
+                            headers: {
+                                Accept: 'application/vnd.github.VERSION.html+json'
+                            },
+                            cache: true,
+                        })
+                        .then(response => {
+                            $log.debug('response', response.config.url, response.data)
+                            const post = PostFactory.createFromIssue(response.data);
+                            $log.debug('post', post)
+                            return post
+                        })
+                )
             },
             getByFilter: async (filter) => {
                 let url = `${BASE_API_URL}/issues`;
@@ -101,7 +111,8 @@ angular
                     .get(url, {
                         headers: {
                             Accept: 'application/vnd.github.VERSION.html+json'
-                        }
+                        },
+                        cache: true,
                     })
                     .then(response => {
                         $log.debug('response', response.config.url, response.data)

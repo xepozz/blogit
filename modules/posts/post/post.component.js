@@ -22,6 +22,7 @@ angular
                         this.dislikesCount = result.thumbDown
                     });
 
+                console.log(this.post)
                 this.post.body = $sce.trustAsHtml(this.post.body)
                 this.showSpinner = false
             };

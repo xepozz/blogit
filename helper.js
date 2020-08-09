@@ -17,6 +17,31 @@ angular
             sanitize: (value) => DOMPurify.sanitize(value, sanitizerConfig)
         }
     })
+    .factory('PromiseCacheService', function ($q, $log, $localStorage) {
+        $log.debug('$localStorage:', $localStorage)
+
+        function cloneResult(data) {
+            if (Array.isArray(data)) {
+                return data.map(item => cloneResult(item))
+            }
+
+            return Object.assign({}, data)
+        }
+
+        return {
+            getOrSet: async (cacheKey, promiseInFunction) => {
+                if ($localStorage[cacheKey]) {
+                    $log.debug('Cache hit detected', cacheKey)
+                    return $q.resolve(Object.assign({}, $localStorage[cacheKey]))
+                }
+                $log.debug('No cache hit detected', cacheKey)
+                const promise = promiseInFunction();
+                const result = await promise;
+                $localStorage[cacheKey] = cloneResult(result)
+                return promise
+            }
+        }
+    })
 ;
 Array.prototype.includesArray = function (array) {
     if (array.length > this.length) {
