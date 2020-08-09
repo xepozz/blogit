@@ -17,8 +17,15 @@ angular
             sanitize: (value) => DOMPurify.sanitize(value, sanitizerConfig)
         }
     })
-    .factory('PromiseCacheService', function ($q, $log, $localStorage) {
+    .factory('PromiseCacheService', function ($q, $log, $localStorage, TimeIntervalService) {
         $log.debug('$localStorage:', $localStorage)
+        const defaultCacheTimeInterval = '10min';
+
+        const internalCacheKey = 'blogit';
+        if (!$localStorage[internalCacheKey]) {
+            $localStorage[internalCacheKey] = {};
+        }
+        let internalStorage = $localStorage[internalCacheKey];
 
         function softClone(data) {
             if (Array.isArray(data)) {
@@ -29,22 +36,57 @@ angular
         }
 
         return {
-            getOrSet: async (cacheKey, promiseInFunction) => {
-                let cacheItem = $localStorage[cacheKey];
-                if (cacheItem) {
-                    cacheItem = softClone(cacheItem)
-                    $log.debug('Cache hit detected', cacheKey, cacheItem)
+            getOrSet: async (cacheKey, promiseInFunction, time = defaultCacheTimeInterval) => {
+                const timeInterval = TimeIntervalService.createFromString(time)
+
+                let cacheItem = internalStorage[cacheKey];
+                if (cacheItem && cacheItem.expiresAt > (new Date()).getTime()) {
+                    $log.debug(
+                        'Cache hit detected by key',
+                        `"${cacheKey}"`,
+                        'with value',
+                        cacheItem.value,
+                        'expires at',
+                        new Date(cacheItem.expiresAt)
+                    )
+                    const cacheItemValue = softClone(cacheItem.value)
                     return $q.resolve(
-                        Array.isArray(cacheItem)
-                            ? cacheItem
-                            : Object.assign({}, cacheItem)
+                        Array.isArray(cacheItemValue)
+                            ? cacheItemValue
+                            : Object.assign({}, cacheItemValue)
                     )
                 }
+
                 $log.debug('No cache hit detected', cacheKey)
                 const promise = promiseInFunction();
-                const result = await promise;
-                $localStorage[cacheKey] = softClone(result)
+
+                internalStorage[cacheKey] = {
+                    value: softClone(await promise),
+                    expiresAt: timeInterval.getTotalTime()
+                }
+
                 return promise
+            }
+        }
+    })
+    .factory('TimeIntervalService', function () {
+        return {
+            createFromString: (string) => {
+                const parts = String(string).split(' ')
+                const minutes = parseInt(parts.find(part => part.includes('min')))
+                const hours = parseInt(parts.find(part => part.includes('hour')))
+
+                return {
+                    minutes: minutes,
+                    hours: hours,
+                    toSeconds: () => minutes * 60 + hours * 3600,
+                    toMilliSeconds: function () {
+                        return this.toSeconds() * 1000
+                    },
+                    getTotalTime: function () {
+                        return (new Date((new Date()).getTime() + this.toMilliSeconds())).getTime()
+                    },
+                }
             }
         }
     })

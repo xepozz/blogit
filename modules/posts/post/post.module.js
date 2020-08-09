@@ -40,8 +40,9 @@ angular
             getReactionCounters: async (id) => {
                 id = Number(id)
                 const cacheKey = 'reactions-id-' + id;
-                return PromiseCacheService.getOrSet(cacheKey, () =>
-                    $http
+                return PromiseCacheService.getOrSet(
+                    cacheKey,
+                    () => $http
                         .get(`${BASE_API_URL}/issues/${id}/reactions`, {
                             headers: {
                                 Accept: 'application/vnd.github.squirrel-girl-preview+json',
@@ -75,8 +76,9 @@ angular
             getById: async (id) => {
                 id = Number(id)
                 const cacheKey = 'post-id-' + id;
-                return PromiseCacheService.getOrSet(cacheKey, () =>
-                    $http
+                return PromiseCacheService.getOrSet(
+                    cacheKey,
+                    () => $http
                         .get(`${BASE_API_URL}/issues/${id}?state=open`, {
                             headers: {
                                 Accept: 'application/vnd.github.VERSION.html+json'
@@ -88,7 +90,8 @@ angular
                             const post = PostFactory.createFromIssue(response.data);
                             $log.debug('post', post)
                             return post
-                        })
+                        }),
+                    '2hours'
                 )
             },
             getByFilter: async (filter) => {
@@ -108,8 +111,9 @@ angular
                     url += ',' + filter.tag
                 }
                 const cacheKey = 'posts-filter-' + Object.values(filter).join('-')
-                return PromiseCacheService.getOrSet(cacheKey, () =>
-                    $http
+                return PromiseCacheService.getOrSet(
+                    cacheKey,
+                    () => $http
                         .get(url, {
                             headers: {
                                 Accept: 'application/vnd.github.VERSION.html+json'
@@ -122,7 +126,8 @@ angular
                             $log.debug('posts', posts)
 
                             return posts
-                        })
+                        }),
+                    '4hours'
                 )
             }
         };

@@ -2,7 +2,7 @@ angular
     .module('posts', ['postModule', 'emptyPostsModule'])
     .component('posts', {
         templateUrl: 'modules/posts/posts.template.html',
-        bindings:{
+        bindings: {
             tag: '<'
         },
         restrict: 'E',

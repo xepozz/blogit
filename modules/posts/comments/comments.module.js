@@ -5,8 +5,9 @@ angular
             getForPost: async (id) => {
                 id = Number(id)
                 const cacheKey = 'post-comments-id-' + id;
-                return PromiseCacheService.getOrSet(cacheKey, () =>
-                    $http
+                return PromiseCacheService.getOrSet(
+                    cacheKey,
+                    () => $http
                         .get(`${BASE_API_URL}/issues/${id}/comments?sort=created`, {
                             headers: {
                                 Accept: 'application/vnd.github.VERSION.html+json'
