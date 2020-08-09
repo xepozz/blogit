@@ -22,10 +22,15 @@ angular
             templateUrl: 'template/content/main.html',
         };
     })
-    .directive('footer', function () {
+    .directive('footer', function ($anchorScroll) {
         return {
             restrict: 'A',
             templateUrl: 'template/layout/footer.html',
+            link: function ($scope) {
+                $scope.scrollToTop = () => {
+                    $anchorScroll()
+                }
+            }
         };
     })
     .run(function ($http, $localStorage, Base64Encoder) {
