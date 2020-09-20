@@ -5,7 +5,7 @@ angular
         bindings: {
             post: '=',
         },
-        controller: function ($sce, PostRepository, $q) {
+        controller: function ($sce, PostRepository, $q, $routeParams) {
             this.commentsLoaded = false
             this.showSpinner = true
             this.loadComments = () => {
@@ -22,8 +22,16 @@ angular
                         this.dislikesCount = result.thumbDown
                     });
 
-                this.post.body = $sce.trustAsHtml(this.post.body)
+                const shortDescription = this.post.body.substring(0, this.post.body.indexOf('<hr>'))
+
+                if ($routeParams && $routeParams.id) {
+                    this.post.body = $sce.trustAsHtml(this.post.body)
+                } else {
+                    this.post.body = $sce.trustAsHtml(shortDescription || this.post.body)
+                }
+
                 this.showSpinner = false
+
             };
         }
     })
