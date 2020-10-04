@@ -13,7 +13,7 @@ angular
             })
         ;
     })
-    .factory('PostFactory', function (POST_REQUIRED_TAGS) {
+    .factory('PostFactory', function ($routeParams, POST_REQUIRED_TAGS) {
         function createFromIssue(issue) {
             const author = new Author(issue.user.login, issue.user.html_url, issue.user.avatar_url);
             let tags = issue.labels.map((label) => label.name);
@@ -30,9 +30,21 @@ angular
             return issueList.map(issue => createFromIssue(issue))
         }
 
+        function getDescription(post) {
+            const delimiter = '<hr>'
+            let description = post.body
+
+            if ($routeParams && !$routeParams.id && post.body.includes(delimiter)) {
+                description = post.body.substring(0, post.body.indexOf(delimiter))
+            }
+
+            return description;
+        }
+
         return {
             createFromIssue: createFromIssue,
             createFromIssueList: createFromIssueList,
+            getDescription: getDescription,
         }
     })
     .factory('PostRepository', function ($http, $log, PostFactory, PromiseCacheService, $q, BASE_API_URL, POST_REQUIRED_TAGS) {
