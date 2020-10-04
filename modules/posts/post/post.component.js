@@ -22,7 +22,14 @@ angular
                         this.dislikesCount = result.thumbDown;
                     });
 
-                this.post.body = $sce.trustAsHtml(PostFactory.getDescription(this.post));
+                let description = this.post.body;
+                const delimiter = '<hr>'
+
+                if ($routeParams && !$routeParams.id && this.post.body.includes(delimiter)) {
+                    description = PostFactory.getShortDescription(this.post, delimiter)
+                }
+
+                this.post.body = $sce.trustAsHtml(description);
                 this.showSpinner = false;
             };
         }
