@@ -5,7 +5,7 @@ angular
         bindings: {
             post: '=',
         },
-        controller: function ($sce, PostRepository, PostFactory, $q, $routeParams) {
+        controller: function ($sce, PostRepository, $q, $routeParams) {
             this.commentsLoaded = false;
             this.showSpinner = true;
             this.loadComments = () => {
@@ -15,6 +15,10 @@ angular
             this.dislikesCount = 0;
 
             this.$onInit = () => {
+                setTimeout(()=> {
+                    console.log();
+                }, 0)
+
                 $q
                     .resolve(PostRepository.getReactionCounters(this.post.id))
                     .then(result => {
@@ -26,7 +30,7 @@ angular
                 const delimiter = '<hr>'
 
                 if ($routeParams && !$routeParams.id && this.post.body.includes(delimiter)) {
-                    description = PostFactory.getShortDescription(this.post, delimiter)
+                    description = Post().getShortDescription(this.post)
                 }
 
                 this.post.body = $sce.trustAsHtml(description);

@@ -7,7 +7,7 @@ angular
                 resolve: {
                     post: function (PostRepository, $route) {
                         post = PostRepository.getById($route.current.params.id);
-                        return post
+                        return post;
                     },
                 }
             })
@@ -19,31 +19,26 @@ angular
             let tags = issue.labels.map((label) => label.name);
 
             if (!tags.includesArray(POST_REQUIRED_TAGS)) {
-                throw new Error("You can't see unpublished posts.")
+                throw new Error('You can\'t see unpublished posts.');
             }
-            tags = tags.filter(n => !POST_REQUIRED_TAGS.includes(n))
+            tags = tags.filter(n => !POST_REQUIRED_TAGS.includes(n));
 
             return new Post(issue.number, issue.title, issue.body_html, author, tags, issue.comments, issue.created_at);
         }
 
         function createFromIssueList(issueList) {
-            return issueList.map(issue => createFromIssue(issue))
-        }
-
-        function getShortDescription(post, delimiter) {
-            return post.body.substring(0, post.body.indexOf(delimiter));
+            return issueList.map(issue => createFromIssue(issue));
         }
 
         return {
             createFromIssue: createFromIssue,
             createFromIssueList: createFromIssueList,
-            getShortDescription: getShortDescription,
-        }
+        };
     })
     .factory('PostRepository', function ($http, $log, PostFactory, PromiseCacheService, $q, BASE_API_URL, POST_REQUIRED_TAGS) {
         return {
             getReactionCounters: async (id) => {
-                id = Number(id)
+                id = Number(id);
                 const cacheKey = 'reactions-id-' + id;
                 return PromiseCacheService.getOrSet(
                     cacheKey,
@@ -55,7 +50,7 @@ angular
                             cache: true,
                         })
                         .then(response => {
-                            $log.debug('response', response.config.url, response.data)
+                            $log.debug('response', response.config.url, response.data);
                             let reactionCounters = {
                                 '+1': 0,
                                 '-1': 0,
@@ -65,21 +60,21 @@ angular
                                 'hooray': 0,
                                 'rocket': 0,
                                 'eyes': 0,
-                            }
+                            };
                             response.data.map(data => {
                                 const emoji = data.content;
                                 if (reactionCounters.hasOwnProperty(emoji)) {
-                                    reactionCounters[emoji]++
+                                    reactionCounters[emoji]++;
                                 }
-                            })
+                            });
 
                             const arguments = Object.entries(reactionCounters).map(property => property[1]);
-                            return ReactionCounters.apply(null, arguments)
+                            return ReactionCounters.apply(null, arguments);
                         })
-                )
+                );
             },
             getById: async (id) => {
-                id = Number(id)
+                id = Number(id);
                 const cacheKey = 'post-id-' + id;
                 return PromiseCacheService.getOrSet(
                     cacheKey,
@@ -91,31 +86,31 @@ angular
                             cache: true,
                         })
                         .then(response => {
-                            $log.debug('response', response.config.url, response.data)
+                            $log.debug('response', response.config.url, response.data);
                             const post = PostFactory.createFromIssue(response.data);
-                            $log.debug('post', post)
-                            return post
+                            $log.debug('post', post);
+                            return post;
                         }),
                     '5hours'
-                )
+                );
             },
             getByFilter: async (filter) => {
                 let url = `${BASE_API_URL}/issues`;
-                url += '?sort=created'
+                url += '?sort=created';
                 if (filter.state) {
-                    url += '&state=' + filter.state
+                    url += '&state=' + filter.state;
                 }
                 if (filter.limit) {
-                    url += '&per_page=' + filter.limit
+                    url += '&per_page=' + filter.limit;
                 }
                 if (filter.offset) {
-                    url += '&page=' + filter.offset
+                    url += '&page=' + filter.offset;
                 }
-                url += '&labels=' + POST_REQUIRED_TAGS.join(',')
+                url += '&labels=' + POST_REQUIRED_TAGS.join(',');
                 if (filter.tag) {
-                    url += ',' + filter.tag
+                    url += ',' + filter.tag;
                 }
-                const cacheKey = 'posts-filter-' + Object.values(filter).join('-')
+                const cacheKey = 'posts-filter-' + Object.values(filter).join('-');
                 return PromiseCacheService.getOrSet(
                     cacheKey,
                     () => $http
@@ -126,14 +121,14 @@ angular
                             cache: true,
                         })
                         .then(response => {
-                            $log.debug('response', response.config.url, response.data)
+                            $log.debug('response', response.config.url, response.data);
                             const posts = PostFactory.createFromIssueList(response.data);
-                            $log.debug('posts', posts)
+                            $log.debug('posts', posts);
 
-                            return posts
+                            return posts;
                         }),
                     '2hours'
-                )
+                );
             }
         };
     })
@@ -149,7 +144,7 @@ function ReactionCounters(thumbUp, thumbDown, laugh, confused, heart, hooray, ro
         hooray: hooray,
         rocket: rocket,
         eyes: eyes,
-    }
+    };
 }
 
 function PostRepositoryFilter(limit, offset, tag) {
@@ -158,11 +153,12 @@ function PostRepositoryFilter(limit, offset, tag) {
         offset: offset,
         state: 'open',
         tag: tag,
-    }
+    };
 }
 
 
-function Post(id, title, body, author, tags, commentsCount, createdAt) {
+function Post(id, title, body, author, tags, commentsCount, createdAt, getShortDescription) {
+
     return {
         id: id,
         title: title,
@@ -172,7 +168,11 @@ function Post(id, title, body, author, tags, commentsCount, createdAt) {
         selfUrl: id,
         commentsCount: commentsCount,
         createdAt: createdAt,
-    }
+        getShortDescription: function (post) {
+            const delimiter = '<hr>'
+            return post.body.substring(0, post.body.indexOf(delimiter));
+        }
+    };
 }
 
 function Author(username, url, avatarUrl) {
@@ -180,5 +180,5 @@ function Author(username, url, avatarUrl) {
         username: username,
         url: url,
         avatarUrl: avatarUrl,
-    }
+    };
 }
