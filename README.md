@@ -5,7 +5,7 @@
 
 1. Create your own repository (https://github.com/new)
   Fill in the `Repository name` and copy the link to the created repository
-2. Open the console
+2. Open console
   - Clone the repository https://github.com/xepozz/blogit to the folder with your project: `git clone https://github.com/xepozz/blogit /path/to/projects/{repository_name}`
   - Change the remote repository to your own:
      * `cd /path/to/projects/{repository_name}`
